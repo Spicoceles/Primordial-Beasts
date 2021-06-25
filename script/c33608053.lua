@@ -5,8 +5,8 @@ function s.initial_effect(c)
 local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stingid(id,0))
 		e1:SetCategory(CATEGORY_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND)
-		e1:SetType(EFFECT_TYPE_TRIGGER_O
-		e1:SetProperty(EFFECT_FLAG_)
+		e1:SetType(EFFECT_TYPE_TRIGGER_O)
+		--e1:SetProperty(EFFECT_FLAG_)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetCode(EVENT_SUMMON_SUCCESS)
 		e1:SetCountLimit(1,id)
@@ -14,9 +14,6 @@ local e1=Effect.CreateEffect(c)
 		e1:SetTarget(s.tg)
 		e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-
-
-
 end
 
 function s.ctfilter(c)
