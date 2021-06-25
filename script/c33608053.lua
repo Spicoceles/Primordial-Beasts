@@ -1,16 +1,16 @@
 -- Primordial Beckoner Kagé
 local s,id=GetID()
 function s.initial_effect(c)
-
 local e1=Effect.CreateEffect(c)
-		e1:SetDescription(aux.Stingid(id,0))
+		e1:SetDescription(aux.Stringid(id,0))
 		e1:SetCategory(CATEGORY_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND)
 		e1:SetType(EFFECT_TYPE_TRIGGER_O)
 		--e1:SetProperty(EFFECT_FLAG_)
 		e1:SetRange(LOCATION_MZONE)
-		e1:SetCode(EVENT_SUMMON_SUCCESS)
+		--e1:SetCode(EVENT_SUMMON_SUCCESS)
 		e1:SetCountLimit(1,id)
 		--e1:SetCondition()
+		e1:SetCondition(s.thcon)
 		e1:SetTarget(s.searchtg)
 		e1:SetOperation(s.searchop)
 	c:RegisterEffect(e1)
@@ -35,19 +35,21 @@ function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+return e:GetHandler():IsSummonType(SUMMON_TYPE_NORMAL)
+end
+
 function s.searchtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.searchfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 
 function s.searchop(e,tp,eg,ep,ev,re,r,rp)
-	if not c:IsRelateToEffect(e) then return end
-	if c:IsRelateToEffect(e) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=Duel.SelectMatchingCard(tp,s.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
-			if #sg>0 then
-			Duel.SendtoHand(sg,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1,tp,sg)
+			local g=Duel.SelectMatchingCard(tp,s.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
+		    if g:GetCount()>0 then
+        Duel.SendtoHand(g,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,g)
 		end
 	end
 end
