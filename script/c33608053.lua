@@ -11,8 +11,8 @@ local e1=Effect.CreateEffect(c)
 		e1:SetCode(EVENT_SUMMON_SUCCESS)
 		e1:SetCountLimit(1,id)
 		--e1:SetCondition()
-		e1:SetTarget(s.tg)
-		e1:SetOperation(s.op)
+		e1:SetTarget(s.searchtg)
+		e1:SetOperation(s.searchop)
 	c:RegisterEffect(e1)
 end
 
@@ -35,41 +35,19 @@ function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 
-function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then
-		local ct=Duel.GetMatchingGroupCount(s.ctfilter,tp,LOCATION_MZONE,0,c)
-		local sel=0
-		--if ct>0 and Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then sel=sel+1 end
-		if Duel.IsExistingMatchingCard(s.searchfilter,tp,LOCATION_DECK,0,1,nil) then sel=sel+2 end
-		e:SetLabel(sel)
-		return sel~=0
-	end
-	local sel=e:GetLabel()
-	if sel==3 then
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
-		sel=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))+1
-	elseif sel==1 then
-		Duel.SelectOption(tp,aux.Stringid(id,1))
-	else
-		Duel.SelectOption(tp,aux.Stringid(id,2))
-	end
-	e:SetLabel(sel)
-	if sel==1 then
-		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	end
+function s.searchtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.searchfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 
-function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local sel=e:GetLabel()
-	if sel==0 then --Originally sel==1
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,s.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if #g>0 then
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,g)
+function s.searchop(e,tp,eg,ep,ev,re,r,rp)
+	if not c:IsRelateToEffect(e) then return end
+	if c:IsRelateToEffect(e) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local sg=Duel.SelectMatchingCard(tp,s.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
+			if #sg>0 then
+			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1,tp,sg)
 		end
 	end
 end
