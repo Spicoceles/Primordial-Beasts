@@ -49,6 +49,5 @@ function s.searchop(e,tp,eg,ep,ev,re,r,rp)
 		    if g:GetCount()>0 then
         Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
-		end
 	end
 end
