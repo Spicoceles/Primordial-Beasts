@@ -1,16 +1,15 @@
 -- Primordial Beckoner Kagé
 local s,id=GetID()
-
-function s.initial_effect(c)
+function s.initial_effect(c)	
 	local e1=Effect.CreateEffect(c)
 		--e1:SetDescription(aux.Stringid(id,0))
 		e1:SetCategory(CATEGORY_SUMMON+CATEGORY_SEARCH+CATEGORY_TOHAND)
-		e1:SetType(EFFECT_TYPE_TRIGGER_O)
+		e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 		--e1:SetProperty(EFFECT_FLAG_)
-		--e1:SetRange(LOCATION_MZONE)
+		e1:SetRange(LOCATION_MZONE)
 		e1:SetCode(EVENT_SUMMON_SUCCESS)
 		e1:SetCountLimit(1,id)
-		e1:SetCondition(s.thcon)
+		e1:SetCondition(s.searchcon)
 		e1:SetTarget(s.searchtg)
 		e1:SetOperation(s.searchop)
 	c:RegisterEffect(e1)
@@ -35,7 +34,7 @@ function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+function s.searchcon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():IsSummonType(SUMMON_TYPE_NORMAL)
 end
 
